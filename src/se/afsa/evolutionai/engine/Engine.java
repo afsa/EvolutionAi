@@ -11,6 +11,8 @@ import se.afsa.evolutionai.entities.ComputerPlayer;
 import se.afsa.evolutionai.entities.Entity;
 import se.afsa.evolutionai.entities.LivingEntity;
 import se.afsa.evolutionai.entities.Player;
+import se.afsa.evolutionai.event.GameEventHandler;
+import se.afsa.evolutionai.event.GameEventType;
 import se.afsa.evolutionai.stage.GUIStage;
 import se.afsa.evolutionai.stage.Stage;
 
@@ -19,7 +21,9 @@ public class Engine {
 	private int FPS;
 	private GameMode gameMode;
 	private Thread loop;
-	private boolean isRunning = false;
+	private boolean 
+			isRunning = false,
+			isDead = false;
 	private static Stage stage;
 	private List<Player> players;
 	private List<ComputerPlayer> computerPlayers;
@@ -28,6 +32,7 @@ public class Engine {
 	private String toggleFPS = "ActionToggleFPS";
 	private String pauseGame = "ActionPauseGame";
 	private FPSCounter FPScounter = new FPSCounter(20, 20, false);
+	private GameEventHandler gameEventHandler = new GameEventHandler();
 	
 	public Engine(Stage gameStage, GameMode gameMode, int FPS) {
 		stage = gameStage;
@@ -73,7 +78,7 @@ public class Engine {
 	}
 
 	private void gameLoop() {
-		while(isRunning) {
+		while(!isDead) {
 			runMechanics(1);
 		}
 	}
@@ -82,7 +87,7 @@ public class Engine {
 		long intervalTargetLength = 1000000000 / FPS;
 		long lastFrame = System.nanoTime();
 		
-		while(true) {
+		while(!isDead) {
 			if(!isRunning) {
 				try {
 					Thread.sleep(10);
@@ -148,14 +153,21 @@ public class Engine {
 	
 	public void togglePause() {
 		isRunning = !isRunning;
+		gameEventHandler.fireEvent(isRunning ? GameEventType.CONTINUE : GameEventType.PAUSE, this);
 	}
 	
 	public void start() {
 		isRunning = true;
+		gameEventHandler.fireEvent(GameEventType.START, this);
 	}
 	
 	public void stop() {
-		isRunning = false;
+		isDead = true;
+		gameEventHandler.fireEvent(GameEventType.STOP, this);
+	}
+	
+	public Stage getStage() {
+		return stage;
 	}
 	
 	private void collisionDetector(List<Entity> entities) {
