@@ -75,6 +75,7 @@ public class Engine {
 		};
 		
 		loop.start();
+		
 	}
 
 	private void gameLoop() {
@@ -166,6 +167,12 @@ public class Engine {
 		gameEventHandler.fireEvent(GameEventType.STOP, this);
 	}
 	
+	public void reload() {
+		reloadEntities();
+		isDead = false;
+		isRunning = false;
+	}
+	
 	public Stage getStage() {
 		return stage;
 	}
@@ -177,8 +184,15 @@ public class Engine {
 			for (int j = n; j < entitySize; j++) {
 				Entity entity1 = entities.get(i);
 				Entity entity2 = entities.get(j);
+				try{
 				if(entity1.getDistance(entity2) < entity1.getRadius() + entity2.getRadius()) {
 					handleCollision(entity1, entity2);
+				}
+				} catch(Exception e) {
+					System.out.println(entity1);
+					System.out.println(entity2);
+					System.out.println(entitySize);
+					System.out.println(j);
 				}
 			}
 			n++;
@@ -230,6 +244,10 @@ public class Engine {
 
 	public void setGameMode(GameMode gameMode) {
 		this.gameMode = gameMode;
+	}
+	
+	public GameEventHandler getGameEventHandler() {
+		return gameEventHandler;
 	}
 	
 	public void reloadEntities() {

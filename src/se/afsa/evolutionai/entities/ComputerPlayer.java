@@ -115,6 +115,10 @@ public class ComputerPlayer extends LivingEntity {
 	private Vector2D getRandomDecision() {
 		return new Vector2D((Math.random() * 2) - 1, (Math.random() * 2) - 1);
 	}
+	
+	public BehaviorData getBehaviorData() {
+		return bd;
+	}
 
 	@Override
 	public void runFrame(List<Entity> entities, double movementAmplifier) {

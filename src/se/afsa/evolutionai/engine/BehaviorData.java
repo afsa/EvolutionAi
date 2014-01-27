@@ -117,15 +117,15 @@ public class BehaviorData {
 		// TODO Auto-generated method stub
 		double rnd = Math.random();
 		
-		if(rnd <= 0.5) {
+		if(rnd <= 0.3) {
 			return (a+b)/2;
 		}
 		
-		if(rnd <= 0.7) {
+		if(rnd <= 0.6) {
 			return a;
 		}
 		
-		if(rnd <= 0.9) {
+		if(rnd <= 0.8) {
 			return b;
 		}
 		
