@@ -2,15 +2,10 @@ package se.afsa.evolutionai.engine;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
-import se.afsa.evolutionai.entities.ComputerPlayer;
-import se.afsa.evolutionai.entities.Entity;
-import se.afsa.evolutionai.entities.LivingEntity;
-import se.afsa.evolutionai.entities.Player;
 import se.afsa.evolutionai.event.GameEventHandler;
 import se.afsa.evolutionai.event.GameEventType;
 import se.afsa.evolutionai.stage.GUIStage;
@@ -25,10 +20,6 @@ public class Engine {
 			isRunning = false,
 			isDead = false;
 	private static Stage stage;
-	private List<Player> players;
-	private List<ComputerPlayer> computerPlayers;
-	private List<Entity> entities;
-	private int totalPlayed;
 	private String toggleFPS = "ActionToggleFPS";
 	private String pauseGame = "ActionPauseGame";
 	private FPSCounter FPScounter = new FPSCounter(20, 20, false);
@@ -64,7 +55,7 @@ public class Engine {
 		
 		loop = new Thread() {
 			public void run() {
-				reloadEntities();
+				stage.reloadEntities();
 				
 				if(stage instanceof GUIStage) {
 					guiGameLoop();
@@ -125,29 +116,13 @@ public class Engine {
 	}
 
 	private void runMechanics(double movementAmplifier) {
-		for (int i = 0; i < players.size(); i++) {
-			LivingEntity tempEntity = players.get(i);
-			if(tempEntity.isAlive()) {
-				tempEntity.runFrame(entities, movementAmplifier);
-			} else {
-				players.remove(tempEntity);
-				entities.remove(tempEntity);
-			}
-		}
+		stage.runMechanics(movementAmplifier);
+		int players = stage.getPlayerCount(),
+			computer = stage.getComputerPlayerCount(),
+			totalPlayed = stage.getTotalPlayed();
+		stage.collisionDetector();
 		
-		for (int i = 0; i < computerPlayers.size(); i++) {
-			LivingEntity tempEntity = computerPlayers.get(i);
-			if(tempEntity.isAlive()) {
-				tempEntity.runFrame(entities, movementAmplifier);
-			} else {
-				computerPlayers.remove(tempEntity);
-				entities.remove(tempEntity);
-			}
-		}
-		
-		collisionDetector(entities);
-		
-		if(gameMode.isFinished(players.size(), computerPlayers.size(), totalPlayed)) {
+		if(gameMode.isFinished(players, computer, totalPlayed)) {
 			stop();
 		}
 	}
@@ -168,7 +143,7 @@ public class Engine {
 	}
 	
 	public void reload() {
-		reloadEntities();
+		stage.reloadEntities();
 		isDead = false;
 		isRunning = false;
 	}
@@ -176,55 +151,7 @@ public class Engine {
 	public Stage getStage() {
 		return stage;
 	}
-	
-	private void collisionDetector(List<Entity> entities) {
-		int n = 1;
-		int entitySize = entities.size();
-		for (int i = 0; i < entitySize; i++) {
-			for (int j = n; j < entitySize; j++) {
-				Entity entity1 = entities.get(i);
-				Entity entity2 = entities.get(j);
-				try{
-				if(entity1.getDistance(entity2) < entity1.getRadius() + entity2.getRadius()) {
-					handleCollision(entity1, entity2);
-				}
-				} catch(Exception e) {
-					System.out.println(entity1);
-					System.out.println(entity2);
-					System.out.println(entitySize);
-					System.out.println(j);
-				}
-			}
-			n++;
-		}
-	}
-
-	private void handleCollision(Entity entity1, Entity entity2) {
-		// TODO Auto-generated method stub
-		switch ((int) Math.signum(entity1.getSize()-entity2.getSize())) {
-		case 1:
-			checkEat(entity1, entity2);
-			break;
-			
-		case -1:
-			checkEat(entity2, entity1);
-			break;
-
-		default:
-			entity1.kill();
-			entity2.kill();
-			break;
-		}
-	}
-	
-	private void checkEat(Entity eater, Entity food) {
-		if(eater instanceof LivingEntity) {
-			((LivingEntity) eater).eat(food);
-		} else {
-			food.kill();
-		}
-	}
-	
+		
 	private void addControlButtons(int key, String reference, AbstractAction abstractAction) {
 		stage.getInputMap().put(KeyStroke.getKeyStroke(key, 0), reference);
 		stage.getActionMap().put(reference, abstractAction);
@@ -248,12 +175,5 @@ public class Engine {
 	
 	public GameEventHandler getGameEventHandler() {
 		return gameEventHandler;
-	}
-	
-	public void reloadEntities() {
-		entities = stage.getEntities();
-		players = stage.getEntities(Player.class);
-		computerPlayers = stage.getEntities(ComputerPlayer.class);
-		totalPlayed = players.size() + computerPlayers.size();
 	}
 }

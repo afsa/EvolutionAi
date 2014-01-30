@@ -17,8 +17,9 @@ public class Plant extends Entity {
 		// TODO Auto-generated constructor stub
 	}
 	
+	// Plants do not die, they increase their size and respawn.
 	@Override
-	public void respawn() {
+	public void kill() {
 		setSize((getSize() < 1000) ? getSize() * (1 + Math.random()) : getSize());
 		super.respawn();
 	}

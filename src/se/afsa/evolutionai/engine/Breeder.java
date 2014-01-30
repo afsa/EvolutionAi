@@ -26,7 +26,7 @@ public class Breeder implements GameListener {
 		List<BehaviorData> children = new ArrayList<>();
 		int parentLength = parents.size();
 		for (int i = 0; i < parentLength; i++) {
-			for (int j = 0; j < 2; j++) {
+			for (int j = 0; j < 10; j++) {
 				children.add(parents.get(i).getBehaviorData().createChildren(parents.get((i+1)%parentLength).getBehaviorData()));
 			}
 		}
@@ -43,7 +43,7 @@ public class Breeder implements GameListener {
 			if(turnsLeft > 0) {
 				turnsLeft--;
 				System.out.println(turns-turnsLeft);
-				event.getEngine().getStage().addEnities(childrenBehaviorData, false);
+				event.getEngine().getStage().addEnities(childrenBehaviorData, 0);
 				event.getEngine().reload();
 			} else {
 				event.getEngine().getGameEventHandler().removeGameListener(this);

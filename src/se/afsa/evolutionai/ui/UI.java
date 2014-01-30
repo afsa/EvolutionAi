@@ -15,7 +15,6 @@ public class UI {
 	
 	private GameEventHandler gameEventHandler = new GameEventHandler();
 	private Breeder breeder;
-	private Engine engine;
 	
 	public void startGUIGame() {
 		startGUIGame(null);
@@ -27,16 +26,16 @@ public class UI {
 		GUIStage guiStage = new GUIStage();
 		guiStage.init();
 		
-		guiStage.addEnities(behaviorData, true);
+		guiStage.addEnities(behaviorData, 1);
 		
-		engine = new Engine(guiStage, GameMode.ALL_PLAYERS_DEAD, 60);
+		new Engine(guiStage, GameMode.ALL_PLAYERS_DEAD, 60);
 	}
 	
 	public void startNonGUIGame(int turns) {
 		Stage stage = new Stage();
-		stage.addEnities(null, true);
+		stage.addEnities(null, 0);
 		breeder = new Breeder(turns, this);
 		gameEventHandler.addGameListener(breeder);
-		engine = new Engine(stage, GameMode.HALF_ALIVE, 0);
+		new Engine(stage, GameMode.HALF_ALIVE, 0);
 	}
 }

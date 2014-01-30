@@ -21,6 +21,9 @@ public abstract class Entity implements Drawable {
 	private Vector2D pos = new Vector2D();
 	private double size;
 	
+	private final Vector2D startPos;
+	private final double startSize;
+	
 	private boolean isAlive = true;
 	
 	/**
@@ -51,6 +54,9 @@ public abstract class Entity implements Drawable {
 		
 		setSize(size);
 		setLocation(x, y);
+		
+		startSize = size;
+		startPos = new Vector2D(x, y);
 	}
 	
 	
@@ -180,5 +186,11 @@ public abstract class Entity implements Drawable {
 	 */
 	public int getPosMaxY() {
 		return posMaxY;
+	}
+	
+	public void reload() {
+		setSize(startSize);
+		setLocation(startPos);
+		isAlive = true;
 	}
 }

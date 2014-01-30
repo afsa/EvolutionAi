@@ -19,19 +19,23 @@ import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
 import se.afsa.evolutionai.entities.Entity;
-import se.afsa.evolutionai.entities.Plant;
 import se.afsa.evolutionai.entities.Player;
 import se.afsa.evolutionai.ui.Drawable;
 
 public class GUIStage extends Stage {
 	/**
-	 * 
+	 * A class that takes care of the entities in the game. This stage supports GUI.
+	 * @see Stage
 	 */
 	private static final long serialVersionUID = 4373102162005375965L;
 	private JFrame frame = new JFrame("Evolution AI");
 	private final String quit = "ActionQuit";
 	private List<Drawable> nonEntityGraphics = new ArrayList<>(); 
 	
+	/**
+	 * Create a new GUI stage that handles the entities and the graphics of the game.
+	 * Escape is set as default as close button.
+	 */
 	public GUIStage() {
 		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), quit);
 		getActionMap().put(quit, new AbstractAction(quit) {
@@ -44,6 +48,9 @@ public class GUIStage extends Stage {
 		});
 	}
 	
+	/**
+	 * Display the stage for the player, this hides the cursor and is closed by escape.
+	 */
 	public void init() {
 		GraphicsEnvironment graphics = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice device = graphics.getDefaultScreenDevice();
@@ -54,10 +61,16 @@ public class GUIStage extends Stage {
 		hideCursor();
 	}
 	
+	/**
+	 * Add a non entity drawable object to the list of objects to be drawn. Objects in this list will be updated every frame.
+	 * The method draw() will then be called.
+	 * @param drawable - the drawable object.
+	 */
 	public void addGraphicalItem(Drawable drawable) {
 		nonEntityGraphics.add(drawable);
 	}
 	
+	// Run on repaint (every frame). Makes calls to all drawable objects.
 	@Override
 	public void paintComponent(Graphics graphics) {
 		super.paintComponent(graphics);
@@ -74,8 +87,6 @@ public class GUIStage extends Stage {
 			Entity tempEntity = entities.get(i);
 			if(tempEntity.isAlive()) {
 				tempEntity.draw(graphics2d);
-			} else if(tempEntity instanceof Plant) {
-				tempEntity.respawn();
 			}
 		}
 		
@@ -84,6 +95,7 @@ public class GUIStage extends Stage {
 		}
 	}
 	
+	// Like the method in super class, but when players are added they become added to the key listener.
 	@Override
 	public void addEntity(Entity entity) {
 		super.addEntity(entity);
@@ -93,6 +105,9 @@ public class GUIStage extends Stage {
 		repaint();
 	}
 	
+	/**
+	 * Hide the cursor.
+	 */
 	private void hideCursor() {
 		frame.getContentPane().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
 				new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "transperent"));

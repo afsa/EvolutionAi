@@ -69,6 +69,10 @@ public abstract class LivingEntity extends Entity {
 		setSize(getSize() + size);
 	}
 	
+	/**
+	 * Eat another entity.
+	 * @param food - the entity to be eaten.
+	 */
 	public void eat(Entity food) {
 		food.kill();
 		this.increaseSize(food.getSize());
