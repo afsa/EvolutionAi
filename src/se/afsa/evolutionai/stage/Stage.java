@@ -253,7 +253,7 @@ public class Stage extends JPanel {
 			if(tempEntity.isAlive()) {
 				numberOfPlayers += (tempEntity instanceof Player) ? 1 : 0;
 				numberOfComputerPlayers += (tempEntity instanceof ComputerPlayer) ? 1 : 0;
-				tempEntity.runFrame(entities, movementAmplifier);
+				tempEntity.runFrame(aliveEntities, movementAmplifier);
 			} else {
 				removeDeadEntity(tempEntity);
 			}
