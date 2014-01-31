@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 
+/**
+ * An entity that cannot move. When killed the entity respawns and increases its size.
+ */
 public class Plant extends Entity {
 
 	/**

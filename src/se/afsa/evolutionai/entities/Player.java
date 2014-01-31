@@ -9,6 +9,10 @@ import java.util.List;
 import se.afsa.evolutionai.engine.Keys;
 
 
+/**
+ * An entity controlled by the player.
+ * @see LivingEntity
+ */
 public class Player extends LivingEntity implements KeyListener {
 
 	private Color color;

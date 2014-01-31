@@ -8,6 +8,10 @@ import se.afsa.evolutionai.engine.BehaviorData;
 import se.afsa.evolutionai.engine.Vector2D;
 
 
+/**
+ * An entity that is controlled by an AI.
+ * @see LivingEntity
+ */
 public class ComputerPlayer extends LivingEntity {
 	
 	private BehaviorData bd;
@@ -68,6 +72,11 @@ public class ComputerPlayer extends LivingEntity {
 		}
 	}
 	
+	/**
+	 * Detect the walls in the game and dodge them.
+	 * @return A vector that redirects the entity from the walls.
+	 * @see Vector2D
+	 */
 	private Vector2D wallDetection() {
 		double x = getPos().getX();
 		double y = getPos().getY();
@@ -116,6 +125,10 @@ public class ComputerPlayer extends LivingEntity {
 		return new Vector2D((Math.random() * 2) - 1, (Math.random() * 2) - 1);
 	}
 	
+	/**
+	 * Get the computer player's behavior data (the data that is used by the AI to make decisions).
+	 * @return The behavior data.
+	 */
 	public BehaviorData getBehaviorData() {
 		return bd;
 	}

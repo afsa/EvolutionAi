@@ -11,6 +11,9 @@ import se.afsa.evolutionai.event.GameEventType;
 import se.afsa.evolutionai.stage.GUIStage;
 import se.afsa.evolutionai.stage.Stage;
 
+/**
+ * The class that takes care of the game loop and decides when the game should update the stage.
+ */
 public class Engine {
 	
 	private int FPS;
@@ -25,6 +28,12 @@ public class Engine {
 	private FPSCounter FPScounter = new FPSCounter(20, 20, false);
 	private GameEventHandler gameEventHandler = new GameEventHandler();
 	
+	/**
+	 * Create a new engine.
+	 * @param gameStage - the stage that the engine should run.
+	 * @param gameMode - the type of game mode.
+	 * @param FPS - the target FPS (this is only a target and should not exceed the framerate of the monitor).
+	 */
 	public Engine(Stage gameStage, GameMode gameMode, int FPS) {
 		stage = gameStage;
 		setFPS(FPS);
@@ -69,12 +78,18 @@ public class Engine {
 		
 	}
 
+	/**
+	 * A non-GUI loop.
+	 */
 	private void gameLoop() {
 		while(!isDead) {
 			runMechanics(1);
 		}
 	}
 	
+	/**
+	 * A GUI loop.
+	 */
 	private void guiGameLoop() {
 		long intervalTargetLength = 1000000000 / FPS;
 		long lastFrame = System.nanoTime();
@@ -115,6 +130,10 @@ public class Engine {
 		}
 	}
 
+	/**
+	 * Run the mechanics of the game.
+	 * @param movementAmplifier - the time passed divided of the time that should pass.
+	 */
 	private void runMechanics(double movementAmplifier) {
 		stage.runMechanics(movementAmplifier);
 		int players = stage.getPlayerCount(),
@@ -127,52 +146,95 @@ public class Engine {
 		}
 	}
 	
+	/**
+	 * Toggle game to pause or continue.
+	 */
 	public void togglePause() {
 		isRunning = !isRunning;
 		gameEventHandler.fireEvent(isRunning ? GameEventType.CONTINUE : GameEventType.PAUSE, this);
 	}
 	
+	/**
+	 * Start the game.
+	 */
 	public void start() {
 		isRunning = true;
 		gameEventHandler.fireEvent(GameEventType.START, this);
 	}
 	
+	/**
+	 * Stop the game.
+	 */
 	public void stop() {
 		isDead = true;
 		gameEventHandler.fireEvent(GameEventType.STOP, this);
 	}
 	
+	/**
+	 * Reload the game.
+	 */
 	public void reload() {
 		stage.reloadEntities();
 		isDead = false;
 		isRunning = false;
 	}
 	
+	/**
+	 * Get the stage this engine runs.
+	 * @return The stage.
+	 */
 	public Stage getStage() {
 		return stage;
 	}
 		
+	/**
+	 * Bind keys to controls.
+	 * @param key - the key to be bound.
+	 * @param reference - the reference string (what it does).
+	 * @param abstractAction - the action.
+	 */
 	private void addControlButtons(int key, String reference, AbstractAction abstractAction) {
 		stage.getInputMap().put(KeyStroke.getKeyStroke(key, 0), reference);
 		stage.getActionMap().put(reference, abstractAction);
 	}
 
+	/**
+	 * Get the target FPS.
+	 * @return The FPS.
+	 */
 	public int getFPS() {
 		return FPS;
 	}
 
+	/**
+	 * Set the target FPS.
+	 * @param FPS - the target FPS.
+	 */
 	public void setFPS(int FPS) {
 		this.FPS = FPS;
 	}
 
+	/**
+	 * Get the game mode.
+	 * @return The game mode.
+	 */
 	public GameMode getGameMode() {
 		return gameMode;
 	}
 
+	/**
+	 * Set the game mode.
+	 * Warning! This could bug the game it is done during execution.
+	 * @param gameMode - the new game mode.
+	 */
 	public void setGameMode(GameMode gameMode) {
 		this.gameMode = gameMode;
 	}
 	
+	/**
+	 * Get the game event handler.
+	 * @return The game event handler.
+	 */
 	public GameEventHandler getGameEventHandler() {
 		return gameEventHandler;
 	}

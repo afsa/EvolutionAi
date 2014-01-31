@@ -2,21 +2,49 @@ package se.afsa.evolutionai.engine;
 
 import java.util.HashMap;
 
+/**
+ * Stores behavior data for the computer players. Includes methods for creating chilren for the parents.
+ */
+/**
+ * @author Mattias
+ *
+ */
 public class BehaviorData {
 	
 	private String[] requiredValues = {"distancePower", "distanceAmplifier", "distanceConstant", "offenseAmplifier", "defenceAmplifier", "targetAmplifier",
 			"targetSelfAmplifier", "targetConstant", "wallAmplifier", "wallPower", "wallConstant"}; 
 	private HashMap<String, Double> data = new HashMap<>();
 	
+	/**
+	 * Create a random behavior data class.
+	 */
 	public BehaviorData() {
 		createData();
 	}
 	
+	/**
+	 * Create behavior data from hash map.
+	 * @param data - the hash map
+	 */
 	public BehaviorData(HashMap<String, Double> data) {
 		this.data.putAll(data);
 		checkData();
 	}
 	
+	/**
+	 * Create behavior data from variables. The the constants should be between 0.01 and 10.
+	 * @param distancePower
+	 * @param distanceAmplifier
+	 * @param distanceConstant
+	 * @param offenseAmplifier
+	 * @param defenceAmplifier
+	 * @param targetAmplifier
+	 * @param targetSelfAmplifier
+	 * @param targetConstant
+	 * @param wallAmplifier
+	 * @param wallPower
+	 * @param wallConstant
+	 */
 	public BehaviorData(double distancePower, double distanceAmplifier, double distanceConstant, double offenseAmplifier, double defenceAmplifier,
 			double targetAmplifier, double targetSelfAmplifier, double targetConstant, double wallAmplifier,
 			double wallPower, double wallConstant) {
@@ -80,6 +108,11 @@ public class BehaviorData {
 		return data.get("wallConstant");
 	}
 	
+	/**
+	 * Get data from string name.
+	 * @param key - the string key name.
+	 * @return The data.
+	 */
 	public double get(String key) {
 		if(data.containsKey(key)) {
 			return data.get(key);
@@ -88,6 +121,9 @@ public class BehaviorData {
 		return 0;
 	}
 	
+	/**
+	 * Create random data.
+	 */
 	private void createData() {
 		for (int i = 0; i < requiredValues.length; i++) {
 			double rnd = (Math.random() * 9.99) + 0.01;
@@ -95,6 +131,9 @@ public class BehaviorData {
 		}
 	}
 	
+	/**
+	 * Check if data is valid. If not throw invalid argument exception.
+	 */
 	private void checkData() {
 		for (int i = 0; i < requiredValues.length; i++) {
 			if(!data.containsKey(requiredValues[i])) {
@@ -103,6 +142,11 @@ public class BehaviorData {
 		}
 	}
 	
+	/**
+	 * Create children behavior data.
+	 * @param behaviorData - the other parent.
+	 * @return The new child behavior data.
+	 */
 	public BehaviorData createChildren(BehaviorData behaviorData) {
 		HashMap<String, Double> child = new HashMap<>();
 		for (int i = 0; i < requiredValues.length; i++) {
@@ -113,6 +157,12 @@ public class BehaviorData {
 		return new BehaviorData(child);
 	}
 
+	/**
+	 * Perform miosis.
+	 * @param a - the first data
+	 * @param b - the second data
+	 * @return The child data.
+	 */
 	private Double miosis(double a, double b) {
 		// TODO Auto-generated method stub
 		double rnd = Math.random();

@@ -8,6 +8,9 @@ import java.util.Properties;
 import se.afsa.evolutionai.engine.Vector2D;
 import se.afsa.evolutionai.ui.Drawable;
 
+/**
+ * Entity superclass, all entities extends from this. The entities have position, size, and color.
+ */
 public abstract class Entity implements Drawable {
 	
 	private final static String propertiesLocation = "se/afsa/evolutionai/resource/data/config.properties";
@@ -134,6 +137,10 @@ public abstract class Entity implements Drawable {
 		return size;
 	}
 	
+	/**
+	 * Get the radius of the entity.
+	 * @return The radius.
+	 */
 	public double getRadius() {
 		return Math.sqrt(getSize()) * 3/2;
 	}
@@ -188,6 +195,9 @@ public abstract class Entity implements Drawable {
 		return posMaxY;
 	}
 	
+	/**
+	 * Reset the entity to the initial state it was in at game start.
+	 */
 	public void reload() {
 		setSize(startSize);
 		setLocation(startPos);

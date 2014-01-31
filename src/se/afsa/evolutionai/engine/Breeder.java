@@ -9,6 +9,10 @@ import se.afsa.evolutionai.event.GameEventType;
 import se.afsa.evolutionai.event.GameListener;
 import se.afsa.evolutionai.ui.UI;
 
+/**
+ * Runs the game automatically by extracting and reentering entities into the game.
+ * Is used for generating levels.
+ */
 public class Breeder implements GameListener {
 	
 	private int 
@@ -16,12 +20,22 @@ public class Breeder implements GameListener {
 			turnsLeft;
 	private UI ui;
 
+	/**
+	 * Set the amount of turns the breeder should run.
+	 * @param turns - the amount of turns.
+	 * @param ui - the UI in which the game is run.
+	 */
 	public Breeder(int turns, UI ui) {
 		this.turns = turns;
 		this.turnsLeft = turns;
 		this.ui = ui;
 	}
 	
+	/**
+	 * Generate new children data from the survivors from the last run.
+	 * @param parents - the entities that survived.
+	 * @return A list of behavior data for the new entities.
+	 */
 	private List<BehaviorData> getChildrenData(List<ComputerPlayer> parents) {
 		List<BehaviorData> children = new ArrayList<>();
 		int parentLength = parents.size();
@@ -33,6 +47,7 @@ public class Breeder implements GameListener {
 		return children;
 	}
 
+	// Detect when to reenter and extract the entities.
 	@Override
 	public void handleEvent(GameEvent event) {
 		// TODO Auto-generated method stub

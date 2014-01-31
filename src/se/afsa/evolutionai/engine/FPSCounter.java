@@ -5,6 +5,9 @@ import java.awt.Graphics2D;
 
 import se.afsa.evolutionai.ui.Drawable;
 
+/**
+ * Class for calculating and displaying the FPS of the game.
+ */
 public class FPSCounter implements Drawable {
 	private Integer FPS = 0;
 	private int counter = 0;
@@ -14,12 +17,22 @@ public class FPSCounter implements Drawable {
 			x,
 			y;
 	
+	/**
+	 * Create a new FPSCounter.
+	 * @param x - x coordinate.
+	 * @param y - y coordinate.
+	 * @param showFPS - if the counter should be viewed.
+	 */
 	public FPSCounter(int x, int y, boolean showFPS) {
 		this.showFPS = showFPS;
 		this.x = x;
 		this.y = y;
 	}
 	
+	/**
+	 * Call on every frame to be able to detect the FPS.
+	 * @param interval - the interval since the last frame.
+	 */
 	public void countFrame(long interval) {
 		timeElapsed += interval;
 		counter++;
@@ -31,10 +44,17 @@ public class FPSCounter implements Drawable {
 		}
 	}
 	
+	/**
+	 * Get the current FPS.
+	 * @return The FPS.
+	 */
 	public int getFPS() {
 		return FPS;
 	}
 	
+	/**
+	 * Toggle if the FPS should be viewed.
+	 */
 	public void toogleFPS() {
 		showFPS = !showFPS;
 	}
