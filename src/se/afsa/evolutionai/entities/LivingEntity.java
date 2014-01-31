@@ -11,7 +11,11 @@ public abstract class LivingEntity extends Entity {
 	
 	private static boolean livingActive = false;
 	
-	private static double defaultSpeed;
+	private static double
+			defaultSpeed,
+			defaultEnergy;
+	
+	private double energy;
 	
 	/**
 	 * Create a living entity.
@@ -28,7 +32,10 @@ public abstract class LivingEntity extends Entity {
 		if(!livingActive) {
 			livingActive = true;
 			defaultSpeed = Double.parseDouble(getProperties().getProperty("defaultSpeed", "1"));
-		}	
+			defaultEnergy = Double.parseDouble(getProperties().getProperty("defaultEnergy", "1920"));
+		}
+		
+		resetEnergy();
 	}
 	
 	/**
@@ -62,6 +69,7 @@ public abstract class LivingEntity extends Entity {
 	 */
 	public void move(Vector2D vector2d) {
 		setLocation(getPos().add(vector2d));
+		useEnergy(vector2d.length());
 	}
 	
 	/**
@@ -79,5 +87,18 @@ public abstract class LivingEntity extends Entity {
 	public void eat(Entity food) {
 		food.kill();
 		this.increaseSize(food.getSize());
+		resetEnergy();
+	}
+	
+	private void useEnergy(double energyUsed) {
+		energy -= energyUsed;
+		
+		if(energy < 0) {
+			kill();
+		}
+	}
+	
+	private void resetEnergy() {
+		energy = defaultEnergy;
 	}
 }
