@@ -151,19 +151,19 @@ public class BehaviorData {
 		HashMap<String, Double> child = new HashMap<>();
 		for (int i = 0; i < requiredValues.length; i++) {
 			String tempKey = requiredValues[i];
-			child.put(tempKey, miosis(data.get(tempKey), behaviorData.get(tempKey)));
+			child.put(tempKey, meiosis(data.get(tempKey), behaviorData.get(tempKey)));
 		}
 		
 		return new BehaviorData(child);
 	}
 
 	/**
-	 * Perform miosis.
+	 * Perform meiosis.
 	 * @param a - the first data
 	 * @param b - the second data
 	 * @return The child data.
 	 */
-	private Double miosis(double a, double b) {
+	private Double meiosis(double a, double b) {
 		// TODO Auto-generated method stub
 		double rnd = Math.random();
 		
