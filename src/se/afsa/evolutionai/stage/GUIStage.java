@@ -1,5 +1,6 @@
 package se.afsa.evolutionai.stage;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
@@ -109,7 +110,7 @@ public class GUIStage extends Stage {
 	 * Hide the cursor.
 	 */
 	private void hideCursor() {
-		frame.getContentPane().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
-				new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "transperent"));
+		Cursor noCursor = Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "NoCursor");
+		frame.getContentPane().setCursor(noCursor);
 	}
 }

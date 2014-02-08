@@ -1,23 +1,22 @@
 package se.afsa.evolutionai.entities;
 
 import java.awt.Graphics2D;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 import se.afsa.evolutionai.engine.Vector2D;
+import se.afsa.evolutionai.resource.Config;
 import se.afsa.evolutionai.ui.Drawable;
+import se.afsa.quadtree.Bounds;
+import se.afsa.quadtree.QuadTreeElement;
 
 /**
  * Entity superclass, all entities extends from this. The entities have position, size, and color.
  */
-public abstract class Entity implements Drawable {
+public abstract class Entity implements Drawable, QuadTreeElement {
 	
-	private final static String propertiesLocation = "se/afsa/evolutionai/resource/data/config.properties";
-	private static Properties properties = new Properties();
+	private Config config = new Config();
+	
 	private static boolean active = false;
-	
-	private static int 
+	public static int 
 			posMaxX,
 			posMaxY;
 	
@@ -39,20 +38,8 @@ public abstract class Entity implements Drawable {
 	protected Entity(double size, double x, double y) {
 		if(!active) {
 			active = true;
-			try {
-				InputStream is = getClass().getClassLoader().getResourceAsStream(propertiesLocation);
-				properties.load(is);
-				is.close();
-				
-				//Load default data
-				posMaxX = Integer.parseInt(properties.getProperty("posMaxX", "0"));
-				posMaxY = Integer.parseInt(properties.getProperty("posMaxY", "0"));
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				// Throw error event!!
-				e.printStackTrace();
-			}
+			posMaxX = config.getInt("posMaxX", "0");
+			posMaxY = config.getInt("posMaxY", "0");
 		}
 		
 		setSize(size);
@@ -171,12 +158,12 @@ public abstract class Entity implements Drawable {
 	}
 	
 	/**
-	 * Get properties object
-	 * @return properties object
-	 * @see Properties
+	 * Get config object
+	 * @return Config object
+	 * @see Config
 	 */
-	public Properties getProperties() {
-		return properties;
+	public Config getConfig() {
+		return config;
 	}
 	
 	/**
@@ -202,5 +189,17 @@ public abstract class Entity implements Drawable {
 		setSize(startSize);
 		setLocation(startPos);
 		isAlive = true;
+	}
+
+
+	@Override
+	public Bounds bounds() {
+		// TODO Auto-generated method stub
+		double
+			xMin = getPos().getX() - getRadius(),
+			xMax = getPos().getX() + getRadius(),
+			yMin = getPos().getY() - getRadius(),
+			yMax = getPos().getY() + getRadius();
+		return new Bounds(xMin, xMax, yMin, yMax);
 	}
 }

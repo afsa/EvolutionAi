@@ -11,7 +11,7 @@ public abstract class LivingEntity extends Entity {
 	
 	private static boolean livingActive = false;
 	
-	private static double
+	private static int
 			defaultSpeed,
 			defaultEnergy;
 	
@@ -31,8 +31,8 @@ public abstract class LivingEntity extends Entity {
 		super(size, x, y);
 		if(!livingActive) {
 			livingActive = true;
-			defaultSpeed = Double.parseDouble(getProperties().getProperty("defaultSpeed", "1"));
-			defaultEnergy = Double.parseDouble(getProperties().getProperty("defaultEnergy", "1920"));
+			defaultSpeed = getConfig().getInt("defaultSpeed", "1");
+			defaultEnergy = getConfig().getInt("defaultEnergy", "1920");
 		}
 		
 		resetEnergy();

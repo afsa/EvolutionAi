@@ -12,6 +12,9 @@ import se.afsa.evolutionai.entities.Entity;
 import se.afsa.evolutionai.entities.LivingEntity;
 import se.afsa.evolutionai.entities.Plant;
 import se.afsa.evolutionai.entities.Player;
+import se.afsa.evolutionai.resource.Config;
+import se.afsa.quadtree.Bounds;
+import se.afsa.quadtree.QuadTree;
 
 public class Stage extends JPanel {
 	/**
@@ -23,18 +26,38 @@ public class Stage extends JPanel {
 	private List<Entity> aliveEntities = new ArrayList<>();
 	private List<LivingEntity> aliveLivingEntities = new ArrayList<>();
 	private int totalPlayed;
+	private QuadTree<Entity> quadTree;
+	
+	private Config config = new Config();
+	private static boolean active = false;
+	
+	public static int 
+			posMaxX,
+			posMaxY,
+			radiusPlayer,
+			radiusPlants,
+			numberOfEntities,
+			startSizePlayer,
+			startSizePlant;
 	
 	private int 
 			numberOfPlayers = 0,
 			numberOfComputerPlayers = 0;
 	
-	private int
-			radiusPlayer = 300,
-			radiusPlants = 400,
-			numberOfEntities = 10;
-	private double
-			startSizePlayer = 20,
-			startSizePlant = 15;
+	public Stage() {
+		if(!active) {
+			active = true;
+			posMaxX = config.getInt("posMaxX", "0");
+			posMaxY = config.getInt("posMaxY", "0");
+			radiusPlayer = config.getInt("radiusPlayer", "0");
+			radiusPlants = config.getInt("radiusPlants", "0");
+			numberOfEntities = config.getInt("numberOfEntities", "0");
+			startSizePlayer = config.getInt("startSizePlayer", "0");
+			startSizePlant = config.getInt("startSizePlant", "0");
+		}
+		
+		quadTree = new QuadTree<>(5, 5, new Bounds(-posMaxX, posMaxX, -posMaxY, posMaxY));
+	}
 	
 	/**
 	 * Get all entities in the game, also the dead.
@@ -190,19 +213,37 @@ public class Stage extends JPanel {
 	 * Checks game for colliding entities. If collision is found the game handles it.
 	 */
 	public void collisionDetector() {
-		int n = 1;
-		int entitySize = aliveEntities.size();
-		for (int i = 0; i < entitySize; i++) {
-			for (int j = n; j < entitySize; j++) {
-				Entity entity1 = aliveEntities.get(i);
-				Entity entity2 = aliveEntities.get(j);
-				if(entity1.getDistance(entity2) < entity1.getRadius() + entity2.getRadius()) {
+		quadTree.addEntities(aliveEntities);
+		
+		int aliveEntitySize = aliveEntities.size();
+		for (int i = 0; i < aliveEntitySize; i++) {
+			Entity entity1 = aliveEntities.get(i);
+			List<Entity> collisionEntities = quadTree.getPossibleCollisions(entity1.bounds());
+			for (int j = 0; j < collisionEntities.size(); j++) {
+				Entity entity2 = collisionEntities.get(j);
+				if(entity1 != entity2 && entity1.getDistance(entity2) < entity1.getRadius() + entity2.getRadius()) {
 					handleCollision(entity1, entity2);
 				}
 			}
-			n++;
 		}
+		
+		quadTree.clear();
 	}
+	
+//	public void collisionDetector() {
+//		int n = 1;
+//		int entitySize = aliveEntities.size();
+//		for (int i = 0; i < entitySize; i++) {
+//			for (int j = n; j < entitySize; j++) {
+//				Entity entity1 = aliveEntities.get(i);
+//				Entity entity2 = aliveEntities.get(j);
+//				if(entity1.getDistance(entity2) < entity1.getRadius() + entity2.getRadius()) {
+//					handleCollision(entity1, entity2);
+//				}
+//			}
+//			n++;
+//		}
+//	}
 
 	/**
 	 * Make sure which entity is eater and which is food.
@@ -255,6 +296,7 @@ public class Stage extends JPanel {
 				numberOfComputerPlayers += (tempEntity instanceof ComputerPlayer) ? 1 : 0;
 				tempEntity.runFrame(aliveEntities, movementAmplifier);
 			} else {
+				i--;
 				removeDeadEntity(tempEntity);
 			}
 		}
@@ -275,5 +317,4 @@ public class Stage extends JPanel {
 	public int getComputerPlayerCount() {
 		return numberOfComputerPlayers;
 	}
-
 }

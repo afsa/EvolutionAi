@@ -1,16 +1,17 @@
 package se.afsa.evolutionai.engine;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Stores behavior data for the computer players. Includes methods for creating chilren for the parents.
  */
-/**
- * @author Mattias
- *
- */
-public class BehaviorData {
+public class BehaviorData implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3193537697152626031L;
 	private String[] requiredValues = {"distancePower", "distanceAmplifier", "distanceConstant", "offenseAmplifier", "defenceAmplifier", "targetAmplifier",
 			"targetSelfAmplifier", "targetConstant", "wallAmplifier", "wallPower", "wallConstant"}; 
 	private HashMap<String, Double> data = new HashMap<>();

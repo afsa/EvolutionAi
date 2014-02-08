@@ -1,5 +1,6 @@
 package se.afsa.evolutionai.engine;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import se.afsa.evolutionai.entities.ComputerPlayer;
 import se.afsa.evolutionai.event.GameEvent;
 import se.afsa.evolutionai.event.GameEventType;
 import se.afsa.evolutionai.event.GameListener;
+import se.afsa.evolutionai.resource.Config;
+import se.afsa.evolutionai.resource.FileHandler;
 import se.afsa.evolutionai.ui.UI;
 
 /**
@@ -19,6 +22,8 @@ public class Breeder implements GameListener {
 			turns,
 			turnsLeft;
 	private UI ui;
+	
+	private Config config = new Config();
 
 	/**
 	 * Set the amount of turns the breeder should run.
@@ -39,8 +44,9 @@ public class Breeder implements GameListener {
 	private List<BehaviorData> getChildrenData(List<ComputerPlayer> parents) {
 		List<BehaviorData> children = new ArrayList<>();
 		int parentLength = parents.size();
+		int childPerParent = config.getInt("numberOfEntities", "10")/parentLength;
 		for (int i = 0; i < parentLength; i++) {
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < childPerParent; j++) {
 				children.add(parents.get(i).getBehaviorData().createChildren(parents.get((i+1)%parentLength).getBehaviorData()));
 			}
 		}
@@ -61,6 +67,7 @@ public class Breeder implements GameListener {
 				event.getEngine().getStage().addEnities(childrenBehaviorData, 0);
 				event.getEngine().reload();
 			} else {
+				new FileHandler().save(new File("test.bin"), childrenBehaviorData);
 				event.getEngine().getGameEventHandler().removeGameListener(this);
 				ui.startGUIGame(childrenBehaviorData);
 			}
