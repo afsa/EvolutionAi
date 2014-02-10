@@ -26,7 +26,7 @@ public class GameEvent extends EventObject {
 	 * @see GameEventType
 	 */
 	public GameEvent(GameEventType gameEventType, Engine engine, Object caller) {
-		super(engine);
+		super(caller);
 		// TODO Auto-generated constructor stub
 		this.gameEventType = gameEventType;
 		this.engine = engine;

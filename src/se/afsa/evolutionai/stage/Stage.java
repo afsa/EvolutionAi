@@ -1,6 +1,7 @@
 package se.afsa.evolutionai.stage;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,12 +113,16 @@ public class Stage extends JPanel {
 	 * @param player - the number of players
 	 */
 	public void addEnities(List<BehaviorData> behaviorData, int player) {
+		int playerNr = 0;
+		Color[] colors = {new Color(0, 0, 128), new Color(255, 165, 0)};
+		int[][] keys = {{KeyEvent.VK_D, KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S}, {KeyEvent.VK_RIGHT, KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN}};
 		entities = new ArrayList<>();
 		for (int i = 0; i < numberOfEntities; i++) {
 			double x = Math.cos(2*Math.PI*i/numberOfEntities);
 			double y = Math.sin(2*Math.PI*i/numberOfEntities);
-			if(player > i) {
-				addEntity(new Player(startSizePlayer, x * radiusPlayer, y * radiusPlayer, new Color(0, 0, 128)));
+			if(player != 0 && i%(numberOfEntities/player) == 0) {
+				addEntity(new Player(startSizePlayer, x * radiusPlayer, y * radiusPlayer, colors[playerNr], keys[playerNr]));
+				playerNr++;
 			} else {
 				addEntity(new ComputerPlayer(startSizePlayer, x * radiusPlayer, y * radiusPlayer, (behaviorData != null && behaviorData.size() > i) ? behaviorData.get(i) : new BehaviorData()));
 			}

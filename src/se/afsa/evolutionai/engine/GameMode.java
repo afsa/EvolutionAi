@@ -4,7 +4,7 @@ package se.afsa.evolutionai.engine;
  * Different game modes that the game could use.
  */
 public enum GameMode {
-	ALL_PLAYERS_DEAD(0, -1, 1, -1), LAST_SURVIVOR(-1, -1, 1, -1), LAST_FIVE(-1, -1, 5, -1), HALF_ALIVE(-1, -1, -1, 0.5), CO_OP(0, 0, -1, -1);
+	ALL_PLAYERS_DEAD(0, -1, 1, -1), LAST_SURVIVOR(-1, -1, 1, -1), LAST_FIVE(-1, -1, 5, -1), HALF_ALIVE(-1, -1, -1, 0.5), COOPERATION(0, 0, -1, -1);
 	
 	private int playerCount;
 	private int computerPlayerCount;
@@ -16,6 +16,12 @@ public enum GameMode {
 		this.computerPlayerCount = computerPlayerCount;
 		this.totalCount = totalCount;
 		this.percent = percent;
+	}
+	
+	@Override
+	public String toString() {
+		String name = super.toString().replace("_", " ");
+		return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 	}
 	
 	/**

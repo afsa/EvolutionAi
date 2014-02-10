@@ -8,5 +8,5 @@ package se.afsa.evolutionai.event;
  * STOP - When the game ends.
  */
 public enum GameEventType {
-	START, STOP, PAUSE, CONTINUE;
+	START, STOP, PAUSE, CONTINUE, CLOSE;
 }

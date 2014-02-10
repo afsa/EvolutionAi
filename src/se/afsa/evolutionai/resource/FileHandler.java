@@ -29,7 +29,7 @@ public class FileHandler {
 		return false;
 	}
 	
-	public <T> Object load(File file, Class<T> className) {
+	public Object load(File file) {
 		if(file.exists() && file.isFile()) {
 			try {
 				FileInputStream fileInputStream = new FileInputStream(file);
@@ -37,9 +37,7 @@ public class FileHandler {
 				Object output = objectInputStream.readObject();
 				objectInputStream.close();
 				fileInputStream.close();
-				if(className.isInstance(output)) {
-					return output;
-				}
+				return output;
 			} catch (ClassNotFoundException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

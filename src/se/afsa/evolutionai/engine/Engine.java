@@ -6,15 +6,17 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
+import se.afsa.evolutionai.event.GameEvent;
 import se.afsa.evolutionai.event.GameEventHandler;
 import se.afsa.evolutionai.event.GameEventType;
+import se.afsa.evolutionai.event.GameListener;
 import se.afsa.evolutionai.stage.GUIStage;
 import se.afsa.evolutionai.stage.Stage;
 
 /**
  * The class that takes care of the game loop and decides when the game should update the stage.
  */
-public class Engine {
+public class Engine implements GameListener {
 	
 	private int FPS;
 	private GameMode gameMode;
@@ -35,6 +37,7 @@ public class Engine {
 	 * @param FPS - the target FPS (this is only a target and should not exceed the framerate of the monitor).
 	 */
 	public Engine(Stage gameStage, GameMode gameMode, int FPS) {
+		gameEventHandler.addGameListener(this);
 		stage = gameStage;
 		setFPS(FPS);
 		setGameMode(gameMode);
@@ -237,5 +240,14 @@ public class Engine {
 	 */
 	public GameEventHandler getGameEventHandler() {
 		return gameEventHandler;
+	}
+
+	@Override
+	public void handleEvent(GameEvent event) {
+		// TODO Auto-generated method stub
+		if(event.getEventType() == GameEventType.CLOSE) {
+			isRunning = false;
+			stop();
+		}
 	}
 }

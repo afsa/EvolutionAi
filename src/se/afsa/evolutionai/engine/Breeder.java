@@ -4,13 +4,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Shell;
+
 import se.afsa.evolutionai.entities.ComputerPlayer;
 import se.afsa.evolutionai.event.GameEvent;
 import se.afsa.evolutionai.event.GameEventType;
 import se.afsa.evolutionai.event.GameListener;
 import se.afsa.evolutionai.resource.Config;
 import se.afsa.evolutionai.resource.FileHandler;
-import se.afsa.evolutionai.ui.UI;
 
 /**
  * Runs the game automatically by extracting and reentering entities into the game.
@@ -21,19 +27,26 @@ public class Breeder implements GameListener {
 	private int 
 			turns,
 			turnsLeft;
-	private UI ui;
-	
+	private ProgressBar progressBar;
+	private File file;
 	private Config config = new Config();
+	private Button button;
 
 	/**
 	 * Set the amount of turns the breeder should run.
 	 * @param turns - the amount of turns.
 	 * @param ui - the UI in which the game is run.
 	 */
-	public Breeder(int turns, UI ui) {
+	public Breeder(int turns, ProgressBar progressBar, File file, Button button) {
 		this.turns = turns;
 		this.turnsLeft = turns;
-		this.ui = ui;
+		this.progressBar = progressBar;
+		this.progressBar.setMinimum(0);
+		this.progressBar.setMaximum(this.turns);
+		this.progressBar.setSelection(0);
+		this.file = file;
+		this.button = button;
+		button.setEnabled(false);
 	}
 	
 	/**
@@ -52,6 +65,10 @@ public class Breeder implements GameListener {
 		}
 		return children;
 	}
+	
+	private void swtThreadAccess(Runnable runnable) {
+		Display.getDefault().syncExec(runnable);
+	}
 
 	// Detect when to reenter and extract the entities.
 	@Override
@@ -63,13 +80,32 @@ public class Breeder implements GameListener {
 			
 			if(turnsLeft > 0) {
 				turnsLeft--;
-				System.out.println(turns-turnsLeft);
+				swtThreadAccess(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						progressBar.setSelection(turns-turnsLeft);
+					}
+				});
 				event.getEngine().getStage().addEnities(childrenBehaviorData, 0);
 				event.getEngine().reload();
 			} else {
-				new FileHandler().save(new File("test.bin"), childrenBehaviorData);
 				event.getEngine().getGameEventHandler().removeGameListener(this);
-				ui.startGUIGame(childrenBehaviorData);
+				new FileHandler().save(file, childrenBehaviorData.toArray());
+				swtThreadAccess(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						button.setEnabled(true);
+						MessageBox messageBox = new MessageBox(new Shell(), SWT.ICON_INFORMATION);
+						messageBox.setText("Level generator");
+						messageBox.setMessage("Level generation finished!");
+						messageBox.open();
+						progressBar.setSelection(0);
+					}
+				});
 			}
 		}
 	}
