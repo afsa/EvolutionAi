@@ -17,11 +17,12 @@ import se.afsa.evolutionai.resource.Config;
 import se.afsa.quadtree.Bounds;
 import se.afsa.quadtree.QuadTree;
 
+/**
+ * @author Mattias Jönsson
+ *  A class that takes care of the entities in the game. This does not support GUI.
+ *  @see GUIStage
+ */
 public class Stage extends JPanel {
-	/**
-	 *  A class that takes care of the entities in the game. This does not support GUI.
-	 *  @see GUIStage
-	 */
 	private static final long serialVersionUID = 3562829420792965293L;
 	private List<Entity> entities = new ArrayList<>();
 	private List<Entity> aliveEntities = new ArrayList<>();

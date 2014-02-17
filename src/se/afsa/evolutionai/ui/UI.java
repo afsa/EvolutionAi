@@ -114,11 +114,17 @@ public class UI {
 	 */
 	private List<BehaviorData> load(File level) {
 		if(level != null && level.exists()) {
+			
 			Object loadedData = fileHandler.load(level);
+			
 			if (loadedData instanceof Object[]) {
+				
 				List<BehaviorData> temp = new ArrayList<>();
+				
 				for (int i = 0; i < ((Object[])loadedData).length; i++) {
+					
 					Object tempEntity = ((Object[])loadedData)[i];
+					
 					if(tempEntity instanceof BehaviorData) {
 						temp.add((BehaviorData) tempEntity);
 					}
@@ -159,8 +165,10 @@ public class UI {
 	private void startNonGUIGame(int turns, File startFile, File saveFile, ProgressBar progress, Button[] button) {
 		Stage stage = new Stage();
 		stage.addEnities(load(startFile), 0);
+		
 		breeder = new Breeder(turns, progress, saveFile, button);
 		gameEventHandler.addGameListener(breeder);
+		
 		new Engine(stage, GameMode.LAST_FIVE, 0);
 	}
 	
@@ -179,7 +187,7 @@ public class UI {
 		generateLevel.setLayoutData(generateFormData(progressBar, 10, 20));
 		
 		numberLevels = new Combo(generator, SWT.READ_ONLY);
-		numberLevels.setItems(new String[] {"10", "25", "50", "100", "200", "400", "800", "1600", "3200"});
+		numberLevels.setItems(new String[] {"10", "25", "50", "100", "200", "400", "800"});
 		numberLevels.setLayoutData(generateFormData(generateLevel, 10, 40));
 		numberLevels.select(0);
 		
@@ -187,21 +195,11 @@ public class UI {
 		startFromLevelInfo.setText("Previous level to start from:");
 		startFromLevelInfo.setLayoutData(generateFormData(numberLevels, 10, 20));
 		
-		Button startFromLevel = new Button(generator, SWT.NONE);
-		startFromLevel.setText("Select level");
-		startFromLevel.setLayoutData(generateFormData(startFromLevelInfo, 10, 40));
-		startFromLevel.addSelectionListener(new SelectionListener() {
-			
+		Button startFromLevel = getButton(generator, "Select level", startFromLevelInfo, new Runnable() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void run() {
 				// TODO Auto-generated method stub
 				continueFrom = selectFile("Open", SWT.OPEN, false);
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		
@@ -213,52 +211,15 @@ public class UI {
 		saveFileInfo.setText("Save level as:");
 		saveFileInfo.setLayoutData(generateFormData(startFromLevel, 10, 20));
 		
-		Button saveFile = new Button(generator, SWT.NONE);
-		saveFile.setText("Save as");
-		saveFile.setLayoutData(generateFormData(saveFileInfo, 10, 40));
-		saveFile.addSelectionListener(new SelectionListener() {
-			
+		Button saveFile = getButton(generator, "Save as", saveFileInfo, new Runnable() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void run() {
 				// TODO Auto-generated method stub
 				save = selectFile("Save", SWT.SAVE, true);
 			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
 		});
 		
-		startGenerate = new Button(generator, SWT.NONE);
-		startGenerate.setText("Start generating");
-		startGenerate.setLayoutData(generateFormData(saveFile, 10, 40));
-		startGenerate.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				if(save != null) {
-					if(startOver.getSelection()) {
-						startNonGUIGame(Integer.parseInt((numberLevels.getText())), null, save, progressBar, new Button[] {startGenerate, start});
-					} else {
-						startNonGUIGame(Integer.parseInt((numberLevels.getText())), continueFrom, save, progressBar, new Button[] {startGenerate, start});
-					}
-				} else {
-					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
-					messageBox.setText("Error");
-					messageBox.setMessage("Please select an location to save the level.");
-					messageBox.open();
-				}
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+		startGenerate = getButton(generator, "Start generating", saveFile, new StartGenerating());
 	}
 	
 	/**
@@ -272,21 +233,11 @@ public class UI {
 		startInfo.setText("Select number of players and level to play.\nFirst player uses WASD to move and the second player uses arrow keys.");
 		startInfo.setLayoutData(generateFormData(5, 10, 20));
 		
-		Button selectLevel = new Button(starter, SWT.NONE);
-		selectLevel.setText("Select level");
-		selectLevel.setLayoutData(generateFormData(startInfo, 10, 40));
-		selectLevel.addSelectionListener(new SelectionListener() {
-			
+		Button selectLevel = getButton(starter, "Select level", startInfo, new Runnable() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void run() {
 				// TODO Auto-generated method stub
 				open = selectFile("Open", SWT.OPEN, false);
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		
@@ -321,19 +272,27 @@ public class UI {
 		targetFPS.setLayoutData(generateFormData(FPSinfo, 10, 40));
 		targetFPS.select(2);
 		
-		start = new Button(starter, SWT.NONE);
-		start.setText("Start game");
-		start.setLayoutData(generateFormData(targetFPS, 10, 40));
-		start.addSelectionListener(new SelectionListener() {
+		start = getButton(starter, "Start game", targetFPS, new StartGame());
+	}
+	
+	/**
+	 * Create a button.
+	 * @param parent - parent composite.
+	 * @param text - the text.
+	 * @param previous - the previous object.
+	 * @param runnable - fired when pressed.
+	 * @return The button.
+	 */
+	private Button getButton(Composite parent, String text, Control previous, final Runnable runnable) {
+		Button temp = new Button(parent, SWT.NONE);
+		temp.setText(text);
+		temp.setLayoutData(generateFormData(previous, 10, 40));
+		temp.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
-				if(randomLevel.getSelection()) {
-					loadGameGUI(numberPlayers.getSelectionIndex() + 1, GameMode.valueOf(gameModeSelecter.getText().toUpperCase().replace(" ", "_")), Integer.parseInt(targetFPS.getText()));
-				} else {
-					loadGameGUI(numberPlayers.getSelectionIndex() + 1, GameMode.valueOf(gameModeSelecter.getText().toUpperCase().replace(" ", "_")), Integer.parseInt(targetFPS.getText()), open);
-				}
+				runnable.run();
 			}
 			
 			@Override
@@ -342,6 +301,7 @@ public class UI {
 				
 			}
 		});
+		return temp;
 	}
 	
 	/**
@@ -362,6 +322,13 @@ public class UI {
 		return null;
 	}
 	
+	/**
+	 * Create form data.
+	 * @param control - the previous object.
+	 * @param offsetY - y.
+	 * @param offsetX - x.
+	 * @return The form data.
+	 */
 	private FormData generateFormData(Control control, int offsetY, int offsetX) {
 		FormData formData = new FormData();
 		formData.top = new FormAttachment(control, offsetY);
@@ -369,6 +336,14 @@ public class UI {
 		return formData;
 	}
 	
+	
+	/**
+	 * Create form data.
+	 * @param percentY - the percent to top.
+	 * @param offsetY - y.
+	 * @param offsetX - x.
+	 * @return The form data.
+	 */
 	private FormData generateFormData(int percentY, int offsetY, int offsetX) {
 		FormData formData = new FormData();
 		formData.top = new FormAttachment(percentY, offsetY);
@@ -376,10 +351,69 @@ public class UI {
 		return formData;
 	}
 	
+	/**
+	 * Create form data.
+	 * @param controlY - previous y object.
+	 * @param controlX - previous x object.
+	 * @param offsetY - y.
+	 * @param offsetX - x.
+	 * @return The form data.
+	 */
 	private FormData generateFormDataNextTo(Control controlY, Control controlX, int offsetY, int offsetX) {
 		FormData formData = new FormData();
 		formData.top = new FormAttachment(controlY, offsetY, SWT.CENTER);
 		formData.left = new FormAttachment(controlX, offsetX);
 		return formData;
+	}
+	
+	/**
+	 * @author Mattias Jönsson
+	 * Start generating objects.
+	 *
+	 */
+	class StartGenerating implements Runnable {
+		public void run() {
+			// TODO Auto-generated method stub
+			if(save != null) {
+				
+				Button[] buttons = new Button[] {startGenerate, start};
+				int turns = Integer.parseInt((numberLevels.getText()));
+				
+				if(startOver.getSelection()) {
+					startNonGUIGame(turns, null, save, progressBar, buttons);
+				} else {
+					startNonGUIGame(turns, continueFrom, save, progressBar, buttons);
+				}
+			} else {
+				MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+				messageBox.setText("Error");
+				messageBox.setMessage("Please select an location to save the level.");
+				messageBox.open();
+			}
+		}
+	}
+	
+	/**
+	 * @author Mattias Jönsson
+	 * Start game.
+	 *
+	 */
+	class StartGame implements Runnable {
+		public void run() {
+			// TODO Auto-generated method stub
+			
+			int
+				playerCount = numberPlayers.getSelectionIndex() + 1,
+				FPS = Integer.parseInt(targetFPS.getText());
+			
+			GameMode gameMode = GameMode.valueOf(gameModeSelecter.getText().toUpperCase().replace(" ", "_"));
+				
+			
+			if(randomLevel.getSelection()) {
+				loadGameGUI(playerCount, gameMode, FPS);
+			} else {
+				loadGameGUI(playerCount, gameMode, FPS, open);
+			}
+		}
 	}
 }
