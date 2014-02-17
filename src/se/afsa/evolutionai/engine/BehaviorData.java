@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * Stores behavior data for the computer players. Includes methods for creating chilren for the parents.
+ * Stores behavior data for the computer players. Includes methods for creating children for the parents.
  */
 public class BehaviorData implements Serializable {
 	
@@ -166,20 +166,21 @@ public class BehaviorData implements Serializable {
 	 */
 	private Double meiosis(double a, double b) {
 		// TODO Auto-generated method stub
-		double rnd = Math.random();
+		double rnd = (Math.random()*2)-1;
 		
-		if(rnd <= 0.3) {
-			return (a+b)/2;
+		if(rnd <= 0.33) {
+			return inBounds(a*(1+rnd/5));
 		}
 		
-		if(rnd <= 0.6) {
-			return a;
+		if(rnd <= 0.66) {
+			return inBounds(b*(1+rnd/5));
 		}
 		
-		if(rnd <= 0.8) {
-			return b;
-		}
 		
-		return (Math.random() * 9.99) + 0.01;
+		return inBounds((a+b)/2*(1+rnd/5));
+	}
+	
+	private double inBounds(double input) {
+		return (input >= 0.01) ? ((input <= 10) ? input : 10) : 0.01;
 	}
 }
