@@ -137,5 +137,6 @@ public class ComputerPlayer extends LivingEntity {
 	public void runFrame(List<Entity> entities, double movementAmplifier) {
 		// TODO Auto-generated method stub
 		move(movement(entities).weight(getSpeed()).weight(movementAmplifier));
+		super.useEnergy(movementAmplifier*getSpeed());
 	}
 }

@@ -52,7 +52,8 @@ public class UI {
 	private Button
 			randomLevel,
 			startOver,
-			startGenerate;
+			startGenerate,
+			start;
 	private File
 			continueFrom,
 			open,
@@ -60,6 +61,9 @@ public class UI {
 	
 	private ProgressBar progressBar;
 	
+	/**
+	 * Open UI window.
+	 */
 	public UI() {
 		shell.setImage(new Image(display, getClass().getClassLoader().getResourceAsStream(path + "/icon.png")));
 		shell.setText("Evolution AI");
@@ -82,14 +86,32 @@ public class UI {
 		System.exit(0);
 	}
 	
-	public void loadGameGUI(int playerCount, GameMode gameMode, int FPS) {
+	/**
+	 * Load a GUI game. This method then start the GUI game.
+	 * @param playerCount - the number of players. 
+	 * @param gameMode - the mode that the game will use.
+	 * @param FPS - the target FPS.
+	 */
+	private void loadGameGUI(int playerCount, GameMode gameMode, int FPS) {
 		startGUIGame(playerCount, gameMode, FPS, null);
 	}
 	
-	public void loadGameGUI(int playerCount, GameMode gameMode, int FPS, File level) {
+	/**
+	 * Load a GUI game. This method then start the GUI game.
+	 * @param playerCount - the number of players. 
+	 * @param gameMode - the mode that the game will use.
+	 * @param FPS - the target FPS.
+	 * @param level - the file with the level file.
+	 */
+	private void loadGameGUI(int playerCount, GameMode gameMode, int FPS, File level) {
 		startGUIGame(playerCount, gameMode, FPS, load(level));
 	}
 	
+	/**
+	 * Load the level file and extract the data into a list.
+	 * @param level - the level file
+	 * @return A list of behavior data.
+	 */
 	private List<BehaviorData> load(File level) {
 		if(level != null && level.exists()) {
 			Object loadedData = fileHandler.load(level);
@@ -108,7 +130,14 @@ public class UI {
 		return null;
 	}
 
-	public void startGUIGame(int playerCount, GameMode gameMode, int FPS, List<BehaviorData> behaviorData) {
+	/**
+	 * Start the GUI game
+	 * @param playerCount - the number of players. 
+	 * @param gameMode - the mode that the game will use.
+	 * @param FPS - the target FPS.
+	 * @param behaviorData - a list of all behavior data (if no data exists use null).
+	 */
+	private void startGUIGame(int playerCount, GameMode gameMode, int FPS, List<BehaviorData> behaviorData) {
 		// TODO Auto-generated method stub
 		
 		GUIStage guiStage = new GUIStage();
@@ -119,7 +148,15 @@ public class UI {
 		new Engine(guiStage, gameMode, FPS);
 	}
 	
-	public void startNonGUIGame(int turns, File startFile, File saveFile, ProgressBar progress, Button button) {
+	/**
+	 * Start a game without the GUI. Used for simulations.
+	 * @param turns - the number of iterations the simulation should run.
+	 * @param startFile - the file in which the behavior data is stored, can be null.
+	 * @param saveFile - the file in which the data should be stored.
+	 * @param progress - a progress bar that displays the progress of the simulation.
+	 * @param button - the buttons that should be disabled.
+	 */
+	private void startNonGUIGame(int turns, File startFile, File saveFile, ProgressBar progress, Button[] button) {
 		Stage stage = new Stage();
 		stage.addEnities(load(startFile), 0);
 		breeder = new Breeder(turns, progress, saveFile, button);
@@ -127,6 +164,9 @@ public class UI {
 		new Engine(stage, GameMode.LAST_FIVE, 0);
 	}
 	
+	/**
+	 * Create all graphical components used in the generator form.
+	 */
 	private void generatorForm() {
 		Composite generator = new Composite(shell, SWT.BORDER);
 		generator.setLayout(new FormLayout());
@@ -139,7 +179,7 @@ public class UI {
 		generateLevel.setLayoutData(generateFormData(progressBar, 10, 20));
 		
 		numberLevels = new Combo(generator, SWT.READ_ONLY);
-		numberLevels.setItems(new String[] {"25", "50", "100", "200", "400", "800", "1600", "3200"});
+		numberLevels.setItems(new String[] {"10", "25", "50", "100", "200", "400", "800", "1600", "3200"});
 		numberLevels.setLayoutData(generateFormData(generateLevel, 10, 40));
 		numberLevels.select(0);
 		
@@ -201,9 +241,9 @@ public class UI {
 				// TODO Auto-generated method stub
 				if(save != null) {
 					if(startOver.getSelection()) {
-						startNonGUIGame(Integer.parseInt((numberLevels.getText())), null, save, progressBar, startGenerate);
+						startNonGUIGame(Integer.parseInt((numberLevels.getText())), null, save, progressBar, new Button[] {startGenerate, start});
 					} else {
-						startNonGUIGame(Integer.parseInt((numberLevels.getText())), continueFrom, save, progressBar, startGenerate);
+						startNonGUIGame(Integer.parseInt((numberLevels.getText())), continueFrom, save, progressBar, new Button[] {startGenerate, start});
 					}
 				} else {
 					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
@@ -221,6 +261,9 @@ public class UI {
 		});
 	}
 	
+	/**
+	 * Create all graphical components used in the start-game form.
+	 */
 	private void startForm() {
 		Composite starter = new Composite(shell, SWT.BORDER);	
 		starter.setLayout(new FormLayout());
@@ -278,7 +321,7 @@ public class UI {
 		targetFPS.setLayoutData(generateFormData(FPSinfo, 10, 40));
 		targetFPS.select(2);
 		
-		Button start = new Button(starter, SWT.NONE);
+		start = new Button(starter, SWT.NONE);
 		start.setText("Start game");
 		start.setLayoutData(generateFormData(targetFPS, 10, 40));
 		start.addSelectionListener(new SelectionListener() {
@@ -301,10 +344,17 @@ public class UI {
 		});
 	}
 	
-	private File selectFile(String text, int type, boolean overriteWarning) {
+	/**
+	 * Open a file selector dialog.
+	 * @param text - the text that should be displayed as title.
+	 * @param type - the type of operation (SWT.OPEN or SWT.SAVE).
+	 * @param overwriteWarning - should the user be alerted if file is being overwrote. 
+	 * @return The file selected.
+	 */
+	private File selectFile(String text, int type, boolean overwriteWarning) {
 		FileDialog fileDialog = new FileDialog(shell, type);
 		fileDialog.setFilterExtensions(new String[] {"*.level"});
-		fileDialog.setOverwrite(overriteWarning);
+		fileDialog.setOverwrite(overwriteWarning);
 		String file = fileDialog.open();
 		if (file != null) {
 			return new File(file);

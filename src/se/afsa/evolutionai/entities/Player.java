@@ -65,6 +65,7 @@ public class Player extends LivingEntity implements KeyListener {
 	public void runFrame(List<Entity> entities, double movementAmplifier) {
 		// TODO Auto-generated method stub
 		move(controls.getDirection().weight(getSpeed()).weight(movementAmplifier));
+		super.useEnergy(movementAmplifier*getSpeed());
 	}
 
 	@Override

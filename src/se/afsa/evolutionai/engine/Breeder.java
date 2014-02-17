@@ -30,14 +30,14 @@ public class Breeder implements GameListener {
 	private ProgressBar progressBar;
 	private File file;
 	private Config config = new Config();
-	private Button button;
+	private Button[] button;
 
 	/**
 	 * Set the amount of turns the breeder should run.
 	 * @param turns - the amount of turns.
 	 * @param ui - the UI in which the game is run.
 	 */
-	public Breeder(int turns, ProgressBar progressBar, File file, Button button) {
+	public Breeder(int turns, ProgressBar progressBar, File file, Button[] button) {
 		this.turns = turns;
 		this.turnsLeft = turns;
 		this.progressBar = progressBar;
@@ -46,7 +46,7 @@ public class Breeder implements GameListener {
 		this.progressBar.setSelection(0);
 		this.file = file;
 		this.button = button;
-		button.setEnabled(false);
+		buttonAccess(false, button);
 	}
 	
 	/**
@@ -64,6 +64,12 @@ public class Breeder implements GameListener {
 			}
 		}
 		return children;
+	}
+	
+	private void buttonAccess(boolean access, Button[] button) {
+		for (int i = 0; i < button.length; i++) {
+			button[i].setEnabled(access);
+		}
 	}
 	
 	private void swtThreadAccess(Runnable runnable) {
@@ -98,7 +104,7 @@ public class Breeder implements GameListener {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
-						button.setEnabled(true);
+						buttonAccess(true, button);
 						MessageBox messageBox = new MessageBox(new Shell(), SWT.ICON_INFORMATION);
 						messageBox.setText("Level generator");
 						messageBox.setMessage("Level generation finished!");

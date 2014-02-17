@@ -69,7 +69,6 @@ public abstract class LivingEntity extends Entity {
 	 */
 	public void move(Vector2D vector2d) {
 		setLocation(getPos().add(vector2d));
-		useEnergy(vector2d.length());
 	}
 	
 	/**
@@ -90,7 +89,7 @@ public abstract class LivingEntity extends Entity {
 		resetEnergy();
 	}
 	
-	private void useEnergy(double energyUsed) {
+	protected void useEnergy(double energyUsed) {
 		energy -= energyUsed;
 		
 		if(energy < 0) {

@@ -27,6 +27,7 @@ public class Engine implements GameListener {
 	private static Stage stage;
 	private String toggleFPS = "ActionToggleFPS";
 	private String pauseGame = "ActionPauseGame";
+	private String reloadGame = "ActionReloadGame";
 	private FPSCounter FPScounter = new FPSCounter(20, 20, false);
 	private GameEventHandler gameEventHandler = new GameEventHandler();
 	
@@ -63,22 +64,20 @@ public class Engine implements GameListener {
 					togglePause();
 				}
 			});
+			addControlButtons(KeyEvent.VK_F5, reloadGame, new AbstractAction() {
+				private static final long serialVersionUID = -5363193342610765472L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					reload();
+					((GUIStage) stage).repaint();
+				}
+			});
+			
 		}
 		
-		loop = new Thread() {
-			public void run() {
-				stage.reloadEntities();
-				
-				if(stage instanceof GUIStage) {
-					guiGameLoop();
-				} else {
-					gameLoop();
-				}
-			}
-		};
-		
-		loop.start();
-		
+		start();
 	}
 
 	/**
@@ -160,8 +159,20 @@ public class Engine implements GameListener {
 	/**
 	 * Start the game.
 	 */
-	public void start() {
-		isRunning = true;
+	private void start() {
+		loop = new Thread() {
+			public void run() {
+				stage.reloadEntities();
+				
+				if(stage instanceof GUIStage) {
+					guiGameLoop();
+				} else {
+					gameLoop();
+				}
+			}
+		};
+		
+		loop.start();
 		gameEventHandler.fireEvent(GameEventType.START, this);
 	}
 	
@@ -180,6 +191,10 @@ public class Engine implements GameListener {
 		stage.reloadEntities();
 		isDead = false;
 		isRunning = false;
+		
+		if (!loop.isAlive()) {
+			start();
+		}
 	}
 	
 	/**
