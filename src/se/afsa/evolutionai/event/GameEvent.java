@@ -5,6 +5,7 @@ import java.util.EventObject;
 import se.afsa.evolutionai.engine.Engine;
 
 /**
+ * @author Mattias Jönsson
  * Events that can be called from the game. These events are CONTINUE, PAUSE, START, STOP.
  * @see GameEventType
  */
@@ -13,9 +14,6 @@ public class GameEvent extends EventObject {
 	private GameEventType gameEventType;
 	private Engine engine;
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3344918028742784886L;
 
 	/**

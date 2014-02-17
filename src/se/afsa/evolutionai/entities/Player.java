@@ -10,6 +10,7 @@ import se.afsa.evolutionai.engine.Keys;
 
 
 /**
+ * @author Mattias Jönsson
  * An entity controlled by the player.
  * @see LivingEntity
  */

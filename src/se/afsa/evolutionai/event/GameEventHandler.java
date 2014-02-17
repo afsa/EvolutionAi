@@ -6,6 +6,7 @@ import java.util.List;
 import se.afsa.evolutionai.engine.Engine;
 
 /**
+ * @author Mattias Jönsson
  * A class that handles all the game events. All listeners used in this class is accessed a static variable.
  * Therefore listeners can be added from different handlers with the same result.
  */

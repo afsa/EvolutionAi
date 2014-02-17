@@ -9,6 +9,7 @@ import se.afsa.quadtree.Bounds;
 import se.afsa.quadtree.QuadTreeElement;
 
 /**
+ * @author Mattias Jönsson
  * Entity superclass, all entities extends from this. The entities have position, size, and color.
  */
 public abstract class Entity implements Drawable, QuadTreeElement {

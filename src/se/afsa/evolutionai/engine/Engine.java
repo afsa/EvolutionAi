@@ -14,6 +14,7 @@ import se.afsa.evolutionai.stage.GUIStage;
 import se.afsa.evolutionai.stage.Stage;
 
 /**
+ * @author Mattias Jönsson
  * The class that takes care of the game loop and decides when the game should update the stage.
  */
 public class Engine implements GameListener {

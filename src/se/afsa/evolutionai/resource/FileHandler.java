@@ -7,12 +7,23 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * @author Mattias Jönsson
+ * This opens and saves binary files.
+ *
+ */
 public class FileHandler {
 	
 	public FileHandler() {
 		
 	}
 	
+	/**
+	 * Save a binary file.
+	 * @param file - filename.
+	 * @param object - object to save, must implement Serializable.
+	 * @return If save was successful.
+	 */
 	public boolean save(File file, Object object) {
 		try {
 			FileOutputStream fileOutputStream = new FileOutputStream(file);

@@ -19,6 +19,7 @@ import se.afsa.evolutionai.resource.Config;
 import se.afsa.evolutionai.resource.FileHandler;
 
 /**
+ * @author Mattias Jönsson
  * Runs the game automatically by extracting and reentering entities into the game.
  * Is used for generating levels.
  */

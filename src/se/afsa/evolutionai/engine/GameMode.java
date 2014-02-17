@@ -1,6 +1,7 @@
 package se.afsa.evolutionai.engine;
 
 /**
+ * @author Mattias Jönsson
  * Different game modes that the game could use.
  */
 public enum GameMode {

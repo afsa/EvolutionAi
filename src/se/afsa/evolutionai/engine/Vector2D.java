@@ -2,6 +2,7 @@ package se.afsa.evolutionai.engine;
 
 
 /**
+ * @author Mattias Jönsson
  * A vector in R2 (x, y) with basic operations.
  */
 public class Vector2D {

@@ -5,6 +5,7 @@ import java.util.List;
 import se.afsa.evolutionai.engine.Vector2D;
 
 /**
+ * @author Mattias Jönsson
  * An entity that can move. This, however, needs either an AI or a player to be able to move.
  */
 public abstract class LivingEntity extends Entity {
@@ -99,5 +100,11 @@ public abstract class LivingEntity extends Entity {
 	
 	private void resetEnergy() {
 		energy = defaultEnergy;
+	}
+	
+	@Override
+	public void reload() {
+		super.reload();
+		resetEnergy();
 	}
 }

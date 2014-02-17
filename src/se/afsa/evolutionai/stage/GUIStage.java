@@ -26,6 +26,7 @@ import se.afsa.evolutionai.ui.Drawable;
 
 public class GUIStage extends Stage {
 	/**
+	 * @author Mattias Jönsson
 	 * A class that takes care of the entities in the game. This stage supports GUI.
 	 * @see Stage
 	 */

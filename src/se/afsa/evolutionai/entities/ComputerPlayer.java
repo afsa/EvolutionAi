@@ -9,6 +9,7 @@ import se.afsa.evolutionai.engine.Vector2D;
 
 
 /**
+ * @author Mattias Jönsson
  * An entity that is controlled by an AI.
  * @see LivingEntity
  */

@@ -4,13 +4,11 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 /**
+ * @author Mattias Jönsson
  * Stores behavior data for the computer players. Includes methods for creating children for the parents.
  */
 public class BehaviorData implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3193537697152626031L;
 	private String[] requiredValues = {"distancePower", "distanceAmplifier", "distanceConstant", "offenseAmplifier", "defenceAmplifier", "targetAmplifier",
 			"targetSelfAmplifier", "targetConstant", "wallAmplifier", "wallPower", "wallConstant"}; 

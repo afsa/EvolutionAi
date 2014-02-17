@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * @author Mattias Jönsson
  * A class that converts user input to a vector.
  */
 public class Keys {

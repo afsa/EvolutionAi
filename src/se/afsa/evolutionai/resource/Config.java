@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * @author Mattias Jönsson
+ * Handler for the config files.
+ *
+ */
 public class Config {
 	
 	private final static String propertiesLocation = "se/afsa/evolutionai/resource/data/config.properties";
@@ -25,6 +30,12 @@ public class Config {
 		}
 	}
 	
+	/**
+	 * Get a value form the config.
+	 * @param key - the key.
+	 * @param defaultValue - a default value.
+	 * @return The value if it exists, else the default value.
+	 */
 	public int getInt(String key, String defaultValue) {
 		return Integer.parseInt(properties.getProperty(key, defaultValue));
 	}

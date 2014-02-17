@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import se.afsa.evolutionai.ui.Drawable;
 
 /**
+ * @author Mattias Jönsson
  * Class for calculating and displaying the FPS of the game.
  */
 public class FPSCounter implements Drawable {
