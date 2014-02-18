@@ -182,18 +182,13 @@ public class UI {
 		progressBar = new ProgressBar(generator, SWT.NONE);
 		progressBar.setLayoutData(generateFormData(5, 10, 40));
 		
-		Label generateLevel = new Label(generator, SWT.NONE);
-		generateLevel.setText("Generate a new level.\nIterations to run the level generator:");
-		generateLevel.setLayoutData(generateFormData(progressBar, 10, 20));
+		Label generateLevel = getLabel(generator, "Generate a new level.\nIterations to run the level generator:",
+				progressBar);
 		
-		numberLevels = new Combo(generator, SWT.READ_ONLY);
-		numberLevels.setItems(new String[] {"10", "25", "50", "100", "200", "400", "800"});
-		numberLevels.setLayoutData(generateFormData(generateLevel, 10, 40));
-		numberLevels.select(0);
+		numberLevels = getCombo(generator, new String[] {"10", "25", "50", "100", "200", "400", "800"},
+				0, generateLevel);
 		
-		Label startFromLevelInfo = new Label(generator, SWT.NONE);
-		startFromLevelInfo.setText("Previous level to start from:");
-		startFromLevelInfo.setLayoutData(generateFormData(numberLevels, 10, 20));
+		Label startFromLevelInfo = getLabel(generator, "Previous level to start from:", numberLevels);
 		
 		Button startFromLevel = getButton(generator, "Select level", startFromLevelInfo, new Runnable() {
 			@Override
@@ -207,9 +202,7 @@ public class UI {
 		startOver.setText("Start from new level");
 		startOver.setLayoutData(generateFormDataNextTo(startFromLevel, startFromLevel, 0, 20));
 		
-		Label saveFileInfo = new Label(generator, SWT.NONE);
-		saveFileInfo.setText("Save level as:");
-		saveFileInfo.setLayoutData(generateFormData(startFromLevel, 10, 20));
+		Label saveFileInfo = getLabel(generator, "Save level as:", startFromLevel);
 		
 		Button saveFile = getButton(generator, "Save as", saveFileInfo, new Runnable() {
 			@Override
@@ -230,7 +223,8 @@ public class UI {
 		starter.setLayout(new FormLayout());
 		
 		Label startInfo = new Label(starter, SWT.NONE);
-		startInfo.setText("Select number of players and level to play.\nFirst player uses WASD to move and the second player uses arrow keys.");
+		startInfo.setText("Select number of players and level to play.\n"
+				+ "First player uses WASD to move and the second player uses arrow keys.");
 		startInfo.setLayoutData(generateFormData(5, 10, 20));
 		
 		Button selectLevel = getButton(starter, "Select level", startInfo, new Runnable() {
@@ -245,32 +239,19 @@ public class UI {
 		randomLevel.setText("Generate random level");
 		randomLevel.setLayoutData(generateFormDataNextTo(selectLevel, selectLevel, 0, 20));
 		
-		Label numberPlayersInfo = new Label(starter, SWT.NONE);
-		numberPlayersInfo.setText("Select number of players:");
-		numberPlayersInfo.setLayoutData(generateFormData(selectLevel, 10, 20));
+		Label numberPlayersInfo = getLabel(starter, "Select number of players:", randomLevel);
 		
-		numberPlayers = new Combo(starter, SWT.READ_ONLY);
-		numberPlayers.setItems(new String[] {"1 Player", "2 Players"});
-		numberPlayers.setLayoutData(generateFormData(numberPlayersInfo, 10, 40));
-		numberPlayers.select(0);
+		numberPlayers = getCombo(starter, new String[] {"1 Player", "2 Players"}, 0, numberPlayersInfo);
 		
-		Label gameModeInfo = new Label(starter, SWT.NONE);
-		gameModeInfo.setText("Select gamemode:");
-		gameModeInfo.setLayoutData(generateFormData(numberPlayers, 10, 20));
+		Label gameModeInfo = getLabel(starter, "Select gamemode:", numberPlayers);
 		
-		gameModeSelecter = new Combo(starter, SWT.READ_ONLY);
-		gameModeSelecter.setItems(new String[] {GameMode.ALL_PLAYERS_DEAD.toString(), GameMode.COOPERATION.toString()});
-		gameModeSelecter.setLayoutData(generateFormData(gameModeInfo, 10, 40));
-		gameModeSelecter.select(0);
+		gameModeSelecter = getCombo(starter, 
+				new String[] {GameMode.ALL_PLAYERS_DEAD.toString(), GameMode.COOPERATION.toString()},
+				0, gameModeInfo);
 		
-		Label FPSinfo = new Label(starter, SWT.NONE);
-		FPSinfo.setText("Select target FPS:");
-		FPSinfo.setLayoutData(generateFormData(gameModeSelecter, 10, 20));
+		Label FPSinfo = getLabel(starter, "Select target FPS:", gameModeSelecter);
 		
-		targetFPS = new Combo(starter, SWT.READ_ONLY);
-		targetFPS.setItems(new String[] {"30", "50", "60", "80", "100", "120"});
-		targetFPS.setLayoutData(generateFormData(FPSinfo, 10, 40));
-		targetFPS.select(2);
+		targetFPS = getCombo(starter, new String[] {"30", "50", "60", "80", "100", "120"}, 2, FPSinfo);
 		
 		start = getButton(starter, "Start game", targetFPS, new StartGame());
 	}
@@ -301,6 +282,36 @@ public class UI {
 				
 			}
 		});
+		return temp;
+	}
+	
+	/**
+	 * Create a label.
+	 * @param parent - parent composite.
+	 * @param text - the text.
+	 * @param previous - the previous object.
+	 * @return The label.
+	 */
+	private Label getLabel(Composite parent, String text, Control previous) {
+		Label temp = new Label(parent, SWT.NONE);
+		temp.setText(text);
+		temp.setLayoutData(generateFormData(previous, 10, 20));
+		return temp;
+	}
+	
+	/**
+	 * Create a combo.
+	 * @param parent - the parent composite.
+	 * @param data - the data in the combo.
+	 * @param selected - the selected data.
+	 * @param previous - previous object.
+	 * @return The combo.
+	 */
+	private Combo getCombo(Composite parent, String[] data, int selected, Control previous) {
+		Combo temp = new Combo(parent, SWT.READ_ONLY);
+		temp.setItems(data);
+		temp.setLayoutData(generateFormData(previous, 10, 40));
+		temp.select((data.length > selected) ? selected : 0);
 		return temp;
 	}
 	
